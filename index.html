@@ -11,260 +11,50 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ffffff">
 
-<link id="app-icon" rel="icon" type="image/png">
-<link id="apple-icon" rel="apple-touch-icon">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 
 <style>
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background-color: #ffffff;
-    color: #202124;
-  }
-  .top-bar {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 14px 20px;
-    gap: 16px;
-    font-size: 13px;
-    color: #3c4043;
-  }
-  .apps-grid {
-    width: 20px;
-    height: 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 4px);
-    gap: 3px;
-    align-content: center;
-    justify-content: center;
-    opacity: 0.6;
-  }
-  .apps-grid span {
-    width: 4px;
-    height: 4px;
-    background: #5f6368;
-    border-radius: 50%;
-  }
-  .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #4285F4;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-  }
-  #home-screen {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  .home-center {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px 80px;
-  }
-  .logo {
-    font-size: 74px;
-    font-weight: bold;
-    letter-spacing: -2px;
-    margin-bottom: 26px;
-    user-select: none;
-  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; background-color: #ffffff; color: #202124; }
+  .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 14px 20px; gap: 16px; font-size: 13px; color: #3c4043; }
+  .apps-grid { width: 20px; height: 20px; display: grid; grid-template-columns: repeat(3, 4px); gap: 3px; align-content: center; justify-content: center; opacity: 0.6; }
+  .apps-grid span { width: 4px; height: 4px; background: #5f6368; border-radius: 50%; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #4285F4; color: #ffffff; font-weight: bold; font-size: 15px; display: flex; align-items: center; justify-content: center; user-select: none; }
+  #home-screen { min-height: 100vh; display: flex; flex-direction: column; }
+  .home-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px 80px; }
+  .logo { font-size: 74px; font-weight: bold; letter-spacing: -2px; margin-bottom: 26px; user-select: none; }
   .c-blue { color: #4285F4; }
   .c-red { color: #EA4335; }
   .c-yellow { color: #FBBC05; }
   .c-green { color: #34A853; }
-  .search-box {
-    width: 580px;
-    max-width: 100%;
-    height: 48px;
-    border: 1px solid #dfe1e5;
-    border-radius: 24px;
-    display: flex;
-    align-items: center;
-    padding: 0 18px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(32,33,36,0.12);
-  }
-  .search-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 12px;
-    fill: #9aa0a6;
-    flex-shrink: 0;
-  }
-  .search-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-size: 16px;
-    background: transparent;
-  }
-  .buttons {
-    margin-top: 28px;
-    display: flex;
-    gap: 12px;
-  }
-  .btn {
-    background-color: #f8f9fa;
-    border: 1px solid #f8f9fa;
-    border-radius: 6px;
-    color: #3c4043;
-    font-size: 14px;
-    padding: 0 18px;
-    height: 38px;
-    cursor: pointer;
-  }
-  #result-screen {
-    display: none;
-    background-color: #f8f9fa;
-    min-height: 100vh;
-  }
-  .result-header {
-    background: #ffffff;
-    padding: 14px 24px 0;
-    border-bottom: 1px solid #ebebeb;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  .mini-logo {
-    font-size: 26px;
-    font-weight: bold;
-    letter-spacing: -1px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .header-search {
-    flex: 1;
-    max-width: 600px;
-    height: 42px;
-    box-shadow: 0 1px 5px rgba(32,33,36,0.12);
-  }
-  .tabs {
-    display: flex;
-    gap: 22px;
-    margin-top: 14px;
-    padding-left: 110px;
-    font-size: 14px;
-    color: #5f6368;
-    overflow-x: auto;
-  }
-  .tab {
-    padding-bottom: 10px;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  .tab.active {
-    color: #1a73e8;
-    border-bottom: 3px solid #1a73e8;
-    font-weight: bold;
-  }
-  .results-container {
-    max-width: 660px;
-    margin: 0 0 0 130px;
-    padding: 16px 20px 60px;
-  }
-  .result-stats {
-    color: #70757a;
-    font-size: 13px;
-    margin-bottom: 16px;
-  }
-  .result-item {
-    background: #ffffff;
-    padding: 16px 18px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  }
-  .result-site {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-  .site-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #f1f3f4;
-    color: #5f6368;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .site-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .site-name {
-    font-size: 13px;
-    color: #202124;
-  }
-  .result-url {
-    font-size: 12px;
-    color: #4d5156;
-  }
-  .result-title {
-    font-size: 18px;
-    color: #1a0dab;
-    display: inline-block;
-    margin-bottom: 6px;
-    cursor: pointer;
-    line-height: 1.35;
-  }
-  .result-desc {
-    font-size: 14px;
-    color: #4d5156;
-    line-height: 1.5;
-  }
-  .pagination {
-    margin-top: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-size: 14px;
-    user-select: none;
-    flex-wrap: wrap;
-  }
-  .page-logo {
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: -1px;
-    margin-right: 6px;
-  }
-  .page-num, .page-nav {
-    color: #4285F4;
-    cursor: pointer;
-    padding: 4px 6px;
-  }
-  .page-num.active {
-    color: #202124;
-    font-weight: bold;
-    cursor: default;
-  }
+  .search-box { width: 580px; max-width: 100%; height: 48px; border: 1px solid #dfe1e5; border-radius: 24px; display: flex; align-items: center; padding: 0 18px; background: #ffffff; box-shadow: 0 2px 8px rgba(32,33,36,0.12); }
+  .search-icon { width: 18px; height: 18px; margin-right: 12px; fill: #9aa0a6; flex-shrink: 0; }
+  .search-input { width: 100%; border: none; outline: none; font-size: 16px; background: transparent; }
+  .buttons { margin-top: 28px; display: flex; gap: 12px; }
+  .btn { background-color: #f8f9fa; border: 1px solid #f8f9fa; border-radius: 6px; color: #3c4043; font-size: 14px; padding: 0 18px; height: 38px; cursor: pointer; }
+  #result-screen { display: none; background-color: #f8f9fa; min-height: 100vh; }
+  .result-header { background: #ffffff; padding: 14px 24px 0; border-bottom: 1px solid #ebebeb; position: sticky; top: 0; z-index: 10; }
+  .header-top { display: flex; align-items: center; gap: 20px; }
+  .mini-logo { font-size: 26px; font-weight: bold; letter-spacing: -1px; cursor: pointer; user-select: none; }
+  .header-search { flex: 1; max-width: 600px; height: 42px; box-shadow: 0 1px 5px rgba(32,33,36,0.12); }
+  .tabs { display: flex; gap: 22px; margin-top: 14px; padding-left: 110px; font-size: 14px; color: #5f6368; overflow-x: auto; }
+  .tab { padding-bottom: 10px; cursor: pointer; white-space: nowrap; }
+  .tab.active { color: #1a73e8; border-bottom: 3px solid #1a73e8; font-weight: bold; }
+  .results-container { max-width: 660px; margin: 0 0 0 130px; padding: 16px 20px 60px; }
+  .result-stats { color: #70757a; font-size: 13px; margin-bottom: 16px; }
+  .result-item { background: #ffffff; padding: 16px 18px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .result-site { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .site-icon { width: 24px; height: 24px; border-radius: 50%; background: #f1f3f4; color: #5f6368; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+  .site-info { display: flex; flex-direction: column; }
+  .site-name { font-size: 13px; color: #202124; }
+  .result-url { font-size: 12px; color: #4d5156; }
+  .result-title { font-size: 18px; color: #1a0dab; display: inline-block; margin-bottom: 6px; cursor: pointer; line-height: 1.35; }
+  .result-desc { font-size: 14px; color: #4d5156; line-height: 1.5; }
+  .pagination { margin-top: 35px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; user-select: none; flex-wrap: wrap; }
+  .page-logo { font-size: 24px; font-weight: bold; letter-spacing: -1px; margin-right: 6px; }
+  .page-num, .page-nav { color: #4285F4; cursor: pointer; padding: 4px 6px; }
+  .page-num.active { color: #202124; font-weight: bold; cursor: default; }
   @media (max-width: 768px) {
     .logo { font-size: 52px; }
     .buttons { display: none; }
@@ -282,11 +72,7 @@
   <div id="home-screen">
     <div class="top-bar">
       <span>画像</span>
-      <div class="apps-grid">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-      </div>
+      <div class="apps-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <div class="avatar">J</div>
     </div>
 
@@ -333,32 +119,27 @@
   </div>
 
 <script>
-  // スマホ・PC用の「大きなJ」のPNG画像を自動生成して登録する
-  (function() {
-    var canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 512;
-    var ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, 512, 512);
-
-    ctx.fillStyle = '#4285F4';
-    ctx.font = 'bold 420px Arial, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('J', 256, 280);
-
-    var pngUrl = canvas.toDataURL('image/png');
-    document.getElementById('app-icon').href = pngUrl;
-    document.getElementById('apple-icon').href = pngUrl;
-  })();
-
   var currentWord = '';
-
   var templates = [
     { site: '公式ポータル', icon: '公', url: 'https://example.com › official › news', title: '{KW}に関する最新情報・公式まとめ', desc: '{KW}についての詳細な解説ページです。基本情報から最新の動向、関連するニュースまでわかりやすくまとめています。' },
     { site: 'フリー百科事典', icon: '百', url: 'https://encyclopedia-sample.org › wiki', title: '{KW} - フリー百科事典', desc: '{KW}の概要や歴史、特徴について解説しています。多くの分野で注目されており、近年さまざまな議論が行われています。' },
     { site: 'デイリーニュース', icon: 'N', url: 'https://daily-news.jp › national › topic', title: '【特集】今話題の「{KW}」とは？徹底調査レポート', desc: '話題となっている{KW}の背景を独自に取材。関係者の証言や専門家のコメント、今後の見通しについても詳しく紹介します。' },
     { site: 'ネット掲示板まとめ', icon: '掲', url: 'https://matome-board.net › thread › 2026', title: '【速報】{KW}についての最新スレッド・反応まとめ', desc: '{KW}に関するネット上の声や目撃情報、これまでの経緯を時系列で整理しました。新情報が入り次第随時更新しています。' },
     { site: 'メディアコラム', icon: 'C', url: 'https://column-media.jp › archive', title: 'なぜ「{KW}」はここまで注目されるのか？3つの理由', desc: '近年急速に関心が高まっている{KW}。過去の事例と比較しながら、その本質と知られざる裏側に迫ります。' },
+    { site: 'Q&Aコミュニティ', icon: 'Q', url: 'https://qa-community.jp › question', title: '{KW}について詳しく知っている方いますか？ - 知恵袋', desc: '最近よく耳にする{KW}について質問です。実際に調べた方や詳しい方がいれば、背景や詳細を教えてください。' },
+    { site: 'プレスリリース配信', icon: 'P', url: 'https://press-release.co.jp › view', title: '「{KW}」に関する調査報告書を公開しました', desc: '当研究所では{KW}に関する実態調査を実施し、その結果をまとめました。詳細なデータと分析結果はこちらからご覧いただけます。' },
+    { site: '個人ブログ記録', icon: 'B', url: 'https://blog-diary.jp › entry › 8492', title: '個人的に調べてみた「{KW}」の記録と考察', desc: '以前から気になっていた{KW}について、公開されている資料や過去の記事をもとに自分なりに整理してみました。' },
+    { site: '動画チャンネル', icon: '▶', url: 'https://video-channel.jp › watch', title: '【10分でわかる】{KW}のすべてをわかりやすく解説', desc: 'ニュースでも取り上げられている{KW}について、初めて調べる人にもわかるようにポイントを絞って解説する動画です。' },
+    { site: 'デジタルアーカイブ', icon: '資', url: 'https://archive-library.jp › doc', title: '{KW} 関連資料・過去記事データベース', desc: '{KW}に関連する過去の報道や公的記録のアーカイブ一覧です。年代別・キーワード別に過去の記録を検索できます。' }
+  ];
+  var pagePrefixes = ['', '【続報】', '【検証】', '【解説】', '【記録】', '【考察】', '【アーカイブ】', '【過去記事】', '【関連情報】', '【資料編】'];
+
+  function doSearch(e, inputId) {
+    if (e) e.preventDefault();
+    var word = document.getElementById(inputId).value.trim();
+    if (!word) return;
+    currentWord = word;
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('result-input').value = word;
+    document.title = word + ' - jungle 検索';
