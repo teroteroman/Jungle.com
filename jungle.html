@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jungle</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23ffffff'/><text x='50' y='76' font-family='Arial' font-size='75' font-weight='bold' text-anchor='middle' fill='%234285F4'>J</text></svg>">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #202124;
+  }
+  #home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 85vh;
+  }
+  .logo {
+    font-size: 72px;
+    font-weight: bold;
+    letter-spacing: -2px;
+    margin-bottom: 25px;
+    user-select: none;
+  }
+  .c-blue { color: #4285F4; }
+  .c-red { color: #EA4335; }
+  .c-yellow { color: #FBBC05; }
+  .c-green { color: #34A853; }
+  .search-box {
+    width: 580px;
+    max-width: 90%;
+    height: 44px;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 1px 6px rgba(32,33,36,0.15);
+    box-sizing: border-box;
+  }
+  .search-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+  }
+  .buttons {
+    margin-top: 28px;
+  }
+  .btn {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-size: 14px;
+    margin: 0 6px;
+    padding: 0 16px;
+    height: 36px;
+    cursor: pointer;
+  }
+  #result-screen {
+    display: none;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 1px solid #ebebeb;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .mini-logo {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .results-container {
+    max-width: 650px;
+    margin: 20px 0 60px 150px;
+    padding: 0 20px;
+  }
+  .result-stats {
+    color: #70757a;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .result-item {
+    margin-bottom: 30px;
+  }
+  .result-url {
+    font-size: 14px;
+    color: #202124;
+    margin-bottom: 4px;
+  }
+  .result-title {
+    font-size: 20px;
+    color: #1a0dab;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 6px;
+    cursor: pointer;
+  }
+  .result-title:hover {
+    text-decoration: underline;
+  }
+  .result-desc {
+    font-size: 14px;
+    color: #4d5156;
+    line-height: 1.55;
+  }
+  .pagination {
+    margin-top: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 14px;
+    user-select: none;
+  }
+  .page-logo {
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    margin-right: 10px;
+  }
+  .page-num, .page-nav {
+    color: #4285F4;
+    cursor: pointer;
+    padding: 4px 6px;
+  }
+  .page-num:hover, .page-nav:hover {
+    text-decoration: underline;
+  }
+  .page-num.active {
+    color: #202124;
+    font-weight: bold;
+    cursor: default;
+    text-decoration: none;
+  }
+  @media (max-width: 768px) {
+    .logo { font-size: 48px; }
+    .results-container { margin: 20px auto; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- 最初の画面 -->
+  <div id="home-screen">
+    <div class="logo">
+      <span class="c-blue">j</span><span class="c-red">u</span><span class="c-yellow">n</span><span class="c-blue">g</span><span class="c-green">l</span><span class="c-red">e</span>
+    </div>
+    <form class="search-box" onsubmit="doSearch(event, 'home-input')">
+      <input type="text" id="home-input" class="search-input" placeholder="" autofocus>
+    </form>
+    <div class="buttons">
+      <button class="btn" onclick="doSearch(event, 'home-input')">jungle 検索</button>
+      <button class="btn" onclick="doSearch(event, 'home-input')">I'm Feeling Lucky</button>
+    </div>
+  </div>
+
+  <!-- 検索後の画面 -->
+  <div id="result-screen">
+    <div class="header">
+      <div class="mini-logo" onclick="goHome()">
+        <span class="c-blue">j</span><span class="c-red">u</span><span class="c-yellow">n</span><span class="c-blue">g</span><span class="c-green">l</span><span class="c-red">e</span>
+      </div>
+      <form class="search-box" onsubmit="doSearch(event, 'result-input')">
+        <input type="text" id="result-input" class="search-input">
+      </form>
+    </div>
+
+    <div class="results-container">
+      <div class="result-stats" id="result-stats"></div>
+      <div id="results-list"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+<script>
+  var currentWord = '';
+
+  var templates = [
+    { url: 'https://example.com › official › news', title: '{KW}に関する最新情報・公式まとめ', desc: '{KW}についての詳細な解説ページです。基本情報から最新の動向、関連するニュースまでわかりやすくまとめています。' },
+    { url: 'https://encyclopedia-sample.org › wiki', title: '{KW} - フリー百科事典', desc: '{KW}の概要や歴史、特徴について解説しています。多くの分野で注目されており、近年さまざまな議論が行われています。' },
+    { url: 'https://daily-news.jp › national › topic', title: '【特集】今話題の「{KW}」とは？徹底調査レポート', desc: '話題となっている{KW}の背景を独自に取材。関係者の証言や専門家のコメント、今後の見通しについても詳しく紹介します。' },
+    { url: 'https://matome-board.net › thread › 2026', title: '【速報】{KW}についての最新スレッド・反応まとめ', desc: '{KW}に関するネット上の声や目撃情報、これまでの経緯を時系列で整理しました。新情報が入り次第随時更新しています。' },
+    { url: 'https://column-media.jp › archive', title: 'なぜ「{KW}」はここまで注目されるのか？3つの理由', desc: '近年急速に関心が高まっている{KW}。過去の事例と比較しながら、その本質と知られざる裏側に迫ります。' },
+    { url: 'https://qa-community.jp › question', title: '{KW}について詳しく知っている方いますか？ - 知恵袋', desc: '最近よく耳にする{KW}について質問です。実際に調べた方や詳しい方がいれば、背景や詳細を教えてください。' },
+    { url: 'https://press-release.co.jp › view', title: '「{KW}」に関する調査報告書を公開しました', desc: '当研究所では{KW}に関する実態調査を実施し、その結果をまとめました。詳細なデータと分析結果はこちらからご覧いただけます。' },
+    { url: 'https://blog-diary.jp › entry › 8492', title: '個人的に調べてみた「{KW}」の記録と考察', desc: '以前から気になっていた{KW}について、公開されている資料や過去の記事をもとに自分なりに整理してみました。' },
+    { url: 'https://video-channel.jp › watch', title: '【10分でわかる】{KW}のすべてをわかりやすく解説', desc: 'ニュースでも取り上げられている{KW}について、初めて調べる人にもわかるようにポイントを絞って解説する動画です。' },
+    { url: 'https://archive-library.jp › doc', title: '{KW} 関連資料・過去記事データベース', desc: '{KW}に関連する過去の報道や公的記録のアーカイブ一覧です。年代別・キーワード別に過去の記録を検索できます。' }
+  ];
+
+  var pagePrefixes = [
+    '', '【続報】', '【検証】', '【解説】', '【記録】',
+    '【考察】', '【アーカイブ】', '【過去記事】', '【関連情報】', '【資料編】'
+  ];
+
+  function doSearch(e, inputId) {
+    if (e) e.preventDefault();
+    var word = document.getElementById(inputId).value.trim();
+    if (!word) return;
+    currentWord = word;
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('result-input').value = word;
+    document.title = word + ' - jungle 検索';
+    renderPage(1);
+  }
+
+  function renderPage(page) {
+    window.scrollTo(0, 0);
+
+    var stats = document.getElementById('result-stats');
+    if (page === 1) {
+      stats.textContent = '約 1,240,000 件 （0.28 秒）';
+    } else {
+      stats.textContent = page + ' ページ目（約 1,240,000 件中）';
+    }
+
+    var listHtml = '';
+    var prefix = pagePrefixes[page - 1];
+    for (var i = 0; i < 10; i++) {
+      var item = templates[(i + page - 1) % templates.length];
+      var numLabel = page > 1 ? '（#' + ((page - 1) * 10 + i + 1) + '）' : '';
+      var title = prefix + item.title.replace(/\{KW\}/g, currentWord) + numLabel;
+      var desc = item.desc.replace(/\{KW\}/g, currentWord);
+      var url = item.url + (page > 1 ? ' › page' + page : '');
+
+      listHtml += '<div class="result-item">' +
+        '<div class="result-url">' + url + '</div>' +
+        '<div class="result-title">' + title + '</div>' +
+        '<div class="result-desc">' + desc + '</div>' +
+      '</div>';
+    }
+    document.getElementById('results-list').innerHTML = listHtml;
+
+    var pagHtml = '<div class="page-logo"><span class="c-blue">j</span><span class="c-red">u</span><span class="c-yellow">n</span><span class="c-blue">g</span><span class="c-green">l</span><span class="c-red">e</span></div>';
+    if (page > 1) {
+      pagHtml += '<span class="page-nav" onclick="renderPage(' + (page - 1) + ')">&lt; 前へ</span>';
+    }
+    for (var p = 1; p <= 10; p++) {
+      if (p === page) {
+        pagHtml += '<span class="page-num active">' + p + '</span>';
+      } else {
+        pagHtml += '<span class="page-num" onclick="renderPage(' + p + ')">' + p + '</span>';
+      }
+    }
+    if (page < 10) {
+      pagHtml += '<span class="page-nav" onclick="renderPage(' + (page + 1) + ')">次へ &gt;</span>';
+    }
+    document.getElementById('pagination').innerHTML = pagHtml;
+  }
+
+  function goHome() {
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('home-screen').style.display = 'flex';
+    document.getElementById('home-input').value = '';
+    document.title = 'jungle';
+  }
+</script>
+
+</body>
+</html>
